@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="hovering-tag">
+        <p><a href="https://github.com/telekinetic-0004">JAYMIN S CHANDARIA - @telekinetic0004</a><br>(Hey, great job)</p>
+    </div>
+    {% if get_flashed_messages() %}
+  <ul class="flash-messages">
+    {% for message in get_flashed_messages() %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+    <h1>Dashboard</h1>
+    <p>Welcome, {{ current_user.username }}</p>
+    <h2>Upload File</h2>
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+    <br>
+    <hr>
+    <h2>Uploaded Files</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>File URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for upload in uploads %}
+            <tr>
+                <td>{{ upload.filename }}</td>
+                <td><a href="{{ url_for('uploaded_file', filename=upload.filename) }}" target="_blank">{{upload.filename}}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <hr>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <script>
+        // Get the hovering tag element
+        var hoveringTag = document.querySelector('.hovering-tag');
+    
+        // Initialize variables for storing the cursor position and the tag's position
+        var offsetX, offsetY, posX, posY;
+    
+        // Function to handle mouse down event
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            
+            // Get the current cursor position
+            offsetX = e.clientX;
+            offsetY = e.clientY;
+            
+            // Get the initial position of the hovering tag
+            posX = hoveringTag.offsetLeft;
+            posY = hoveringTag.offsetTop;
+            
+            // Attach the mouse move and mouse up event listeners
+            document.onmousemove = dragMouseMove;
+            document.onmouseup = dragMouseUp;
+        }
+    
+        // Function to handle mouse move event
+        function dragMouseMove(e) {
+            e = e || window.event;
+            e.preventDefault();
+            
+            // Calculate the new position of the hovering tag based on the cursor movement
+            posX = posX - (offsetX - e.clientX);
+            posY = posY - (offsetY - e.clientY);
+            
+            // Set the new position of the hovering tag
+            hoveringTag.style.left = posX + 'px';
+            hoveringTag.style.top = posY + 'px';
+            
+            // Update the cursor position
+            offsetX = e.clientX;
+            offsetY = e.clientY;
+        }
+    
+        // Function to handle mouse up event
+        function dragMouseUp() {
+            // Remove the mouse move and mouse up event listeners
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+    
+        // Attach the mouse down event listener to enable dragging
+        hoveringTag.onmousedown = dragMouseDown;
+    </script>
+    
+</body>
+</html>
