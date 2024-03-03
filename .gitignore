@@ -1,6 +1,6 @@
 /__pycache__
 /database.db
 /vercel.json
-./static/README.md
-./templates/README.md
-/requirements.txt
+/static/README.md
+/templates/README.md
+requirements.txt
